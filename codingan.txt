@@ -1,0 +1,137 @@
+Private Sub MDIForm_Activate()
+Call koneksi
+Rsadmin.Open "select * from tabeladmin where namaadmin ='" & menuutama.StatusBar1.Panels(1).Text & "'", conn
+If Not Rsadmin.EOF Then
+Call tampiluser
+End If
+End Sub
+
+Private Sub MDIForm_Load()
+menuutama.StatusBar1.Panels(1) = Rsadmin!hakakses
+menuutama.StatusBar1.Panels(2) = Rsadmin!namaadmin
+If menuutama.StatusBar1.Panels(1).Text = "Admin" Then
+mnfile.Enabled = True
+mntransaksi.Visible = False
+mnlapbayar.Enabled = True
+mnutility.Enabled = True
+mnlogout.Enabled = True
+Else
+mnfile.Visible = False
+mntransaksi.Enabled = True
+mnlapbayar.Enabled = True
+mnutility.Enabled = True
+mnlogout.Enabled = True
+End If
+End Sub
+
+Private Sub tampiluser()
+menuutama.StatusBar1.Panels(2) = Rsadmin!namaadmin
+End Sub
+
+Private Sub mndtadmin_Click()
+Form2.Show
+End Sub
+
+Private Sub mndtprwtn_Click()
+Form3.Show
+End Sub
+
+Private Sub mnexit_Click()
+Unload Me
+End Sub
+
+Private Sub mnlog_Click()
+Form1.Show
+Unload Me
+End Sub
+
+Private Sub mntransaksipem_Click()
+Form5.Show
+End Sub
+
+Private Sub mnubahpass_Click()
+Form6.Show
+End Sub
+
+
+
+tabel perawatan 
+Sub aktif()
+kd_prwtn.Enabled = True
+jns_prwtn.Enabled = True
+nm_prwtn.Enabled = True
+harga.Enabled = True
+End Sub
+Sub tidakaktif()
+kd_prwtn.Enabled = False
+jns_prwtn.Enabled = False
+nm_prwtn.Enabled = False
+harga.Enabled = False
+End Sub
+Sub kosong()
+kd_prwtn.Text = ""
+jns_prwtn.Text = ""
+nm_prwtn.Text = ""
+harga.Text = ""
+End Sub
+Sub tampil()
+kd_prwtn.Text = Rsperawatan!kodeperawatan
+jns_prwtn.Text = Rsperawatan!jenisperawatan
+nm_prwtn.Text = Rsperawatan!namaperawatan
+harga.Text = Rsperawatan!harga
+End Sub
+
+Private Sub cancel_Click()
+Call Form_Activate
+End Sub
+
+Private Sub Form_Activate()
+Call kosong
+Call tidakaktif
+Call koneksi
+Rsperawatan.Open "select * from tabelperawatan", conn
+Set grid1.DataSource = Rsperawatan.DataSource
+add.SetFocus
+End Sub
+
+Private Sub grid1_Click()
+Call tampil
+Call aktif
+edit.SetFocus
+End Sub
+
+Private Sub delete_click()
+Dim sqlhapus As String
+sqlhapus = "delete from tabelperawatan where kodeperawatan='" & kd_prwtn.Text & "'"
+conn.Execute sqlhapus
+MsgBox ("Data Berhasil Di hapus!")
+Call Form_Activate
+End Sub
+
+Private Sub exit_click()
+Unload Me
+End Sub
+
+Private Sub save_Click()
+Dim masuk As String
+masuk = "insert into tabelperawatan(kodeperawatan,jenisperawatan,namaperawatan,harga)values('" & kd_prwtn.Text & "','" & jns_prwtn.Text & "','" & nm_prwtn.Text & "','" & harga.Text & "')"
+conn.Execute masuk
+MsgBox ("Data Berhasil Di simpan!")
+Call Form_Activate
+End Sub
+
+Private Sub add_Click()
+Call aktif
+Call kosong
+kd_prwtn.SetFocus
+End Sub
+
+Private Sub edit_click()
+Dim rubah As String
+rubah = "update tabelperawatan set jenisperawatan='" & jns_prwtn.Text & "', namaperawatan='" & nm_prwtn.Text & "', harga='" & harga.Text & "' where kodeperawatan='" & kd_prwtn.Text & "'"
+conn.Execute rubah
+MsgBox ("Data berhasil dirubah!")
+Call Form_Activate
+End Sub
+
+
